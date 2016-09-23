@@ -235,6 +235,7 @@ defmodule MyApp.Mailer do
 
   def welcome_email(user) do
     template_params = [
+      title: "Big Welcome!",
       name: user.name,
     ]
 
