@@ -73,7 +73,7 @@ Pretty boring right. So lets add smoothie. First we need a layout, lets try this
 </html>
 ```
 
-Also, lets add a stylesheet. We can use sass for this! save in `web/mailers/templates/layout/style.scss`:
+Also, lets add a stylesheet. We can use sass for this! save in `web/mailers/templates/layout/style.scss`. If you just want to use css you can save it as `style.css`.
 
 ```scss
 $action-color: #50E3C2;
