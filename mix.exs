@@ -9,7 +9,7 @@ defmodule Smoothie.Mixfile do
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       description: """
-      Inline styling and plain text template generation for your email templates.
+      Stylesheet inlining and plain text template generation for your email templates.
       """,
       deps: deps(),
       package: package(),

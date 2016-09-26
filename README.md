@@ -1,6 +1,6 @@
 # Smoothie
 
-Inline styling and plain text template generation for your email templates.
+Stylesheet inlining and plain text template generation for your email templates.
 
 Follow the installation instructions to set up Smoothie. After that we can use it in the following way in our project:
 
