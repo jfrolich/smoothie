@@ -1,6 +1,6 @@
 # Smoothie
 
-Smoothie is a library that will create beautiful emails for your elixir application. It handles inlining of styles, and converting your html templates to plain text.
+Inline styling and plain text template generation for your email templates.
 
 Follow the installation instructions to set up Smoothie. After that we can use it in the following way in our project:
 

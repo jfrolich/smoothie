@@ -4,12 +4,12 @@ defmodule Smoothie.Mixfile do
   def project do
     [
       app: :smoothie,
-      version: "1.0.0",
+      version: "1.0.1",
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       description: """
-      Smoothie is a library that will create beautiful emails for your elixir application. It handles inlining of styles, and converting your html templates to plain text.
+      Inline styling and plain text template generation for your email templates.
       """,
       deps: deps(),
       package: package(),
