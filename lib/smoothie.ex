@@ -12,6 +12,9 @@ defmodule Smoothie do
   # location of the build path
   @build_path [Mix.Project.build_path, '..', '..'] ++ [Application.get_env(:smoothie, :template_dir)] ++ ["build"]
 
+  # create the build folder at compile time if not exists
+  unless File.exists?(Path.join(@build_path)), do: File.mkdir!(Path.join(@build_path))
+git
   @template_files File.ls!(Path.join(@build_path))
   |> Enum.filter(fn(file) -> String.contains?(file, ".eex") end)
 
