@@ -23,7 +23,8 @@ defmodule Smoothie.Mixfile do
     [
       applications: [:logger],
       env: [
-        template_dir: Path.join(["web", "mailers", "templates"])
+        template_dir: Path.join(["web", "mailers", "templates"]),
+        layout_dir: Path.join(["web", "mailers", "templates", "layout"])
       ]
     ]
   end

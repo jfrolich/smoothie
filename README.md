@@ -214,10 +214,19 @@ p, ul, ol {
 
 Now create the template for our email, we can save this in `web/mailers/templates/welcome.html.eex`
 
+Optionally adding additional css styling specific for this template partial is possible using `<style> </style>` tags.
+
 ```html
+<style>
+    .inner-template{
+        font-size: 120%;
+        color: lightgreen;
+    }
+</style>
+
 <h2>Hi <%= name %>,</h2>
 
-<p>Welcome!</p>
+<p class="inner-template">Welcome!</p>
 
 <p>Cheers,</p>
 
@@ -231,7 +240,7 @@ defmodule MyApp.Mailer do
   # your mailgun config here
   @config %{...}
   use Mailgun.Client, @config
-  use Smoothie
+  use Smoothie, otp_app: MyApp, config: MyApp.Newsletter.Smoothie
 
   def welcome_email(user) do
     template_params = [
@@ -285,12 +294,13 @@ Smoothie can be installed as:
   3. Specify the locations of your templates, edit `config/confix.exs` in your Elixir project and add the following config:
 
     ```elixir
-      config :smoothie, template_dir: Path.join(["web", "mailers", "templates"])
+      config :my_app, MyApp.Newsletter.Smoothie,
+        template_dir: Path.join(["web", "mailers", "templates"])
     ```
 
     It can also be in any other directory, just provide the correct directory here.
 
-    It is really important to make sure this directory exists, otherwise your project will not compile.
+    Additional layouts can be used by adding additional configurations.
 
   4. The only thing left is install the npm package that smoothie relies on in your project, we can do this with the following command:
 
