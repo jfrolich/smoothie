@@ -19,7 +19,6 @@ defmodule Smoothie do
       Enum.each(@template_files, fn(file) ->
         # read the contents of the template
         @template_contents File.read!(Path.join(@build_path ++ [file]))
-        |> Og.log_return(__ENV__, :debug)
 
         # capture variables that are defined in the template
         @variables Regex.scan(~r/<%=(.*?)%>/, @template_contents)
@@ -30,7 +29,6 @@ defmodule Smoothie do
           |> String.to_atom()
         end)
         |> Enum.uniq
-        |> Og.log_return(__ENV__, :debug)
 
         # create assignment macro code for in the function block
         @variable_assignments Enum.map(@variables, fn(name) ->
