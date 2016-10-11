@@ -4,7 +4,8 @@ Inline styling and plain text template generation for your email templates.
 
 Follow the installation instructions to set up Smoothie. After that we can use it in the following way in our project:
 
-Let's suppose we are using the excellent Mailgun library to send our emails. Then we set up a Mailer module in the following location: `web/mailers/mailer.ex`, with the following content:
+Let's suppose we are using the excellent Mailgun library to send our emails.
+Then we set up a Mailer module in the following location: `web/mailers/mailer.ex`, with the following content:
 
 ```elixir
 defmodule MyApp.Mailer do
@@ -240,7 +241,7 @@ defmodule MyApp.Mailer do
   # your mailgun config here
   @config %{...}
   use Mailgun.Client, @config
-  use Smoothie, otp_app: MyApp, config: MyApp.Newsletter.Smoothie
+  use Smoothie, otp_app: MyApp, config: __MODULE__
 
   def welcome_email(user) do
     template_params = [
@@ -294,8 +295,15 @@ Smoothie can be installed as:
   3. Specify the locations of your templates, edit `config/confix.exs` in your Elixir project and add the following config:
 
     ```elixir
-      config :my_app, MyApp.Newsletter.Smoothie,
-        template_dir: Path.join(["web", "mailers", "templates"])
+      config :my_app, MyApp.Mailer,
+        template_dir: Path.join(["web", "mailers", "templates"]),
+        layout_dir: Path.join(["web", "mailers", "shared_layout"])
+
+      config :my_app, MyApp.Mailer.Newsletter,
+        template_dir: Path.join(["web", "mailers", "newsletters", "templates"]),
+        layout_dir: Path.join(["web", "mailers", "newsletters", "templates", "layout"])
+
+      config :my_app, smoothie_configs: [MyApp.Mailer, MyApp.Mailer.Newsletter]
     ```
 
     It can also be in any other directory, just provide the correct directory here.
@@ -306,6 +314,21 @@ Smoothie can be installed as:
 
     ```
       > mix smoothie.init
+    ```
+
+    Compile with layout
+    ```
+      > mix smoothie.compile
+    ```
+
+    Compile without a layout
+    ```
+      > mix smoothie.compile --no-layout
+    ```
+
+    Compile [foundation-emails](https://github.com/zurb/foundation-emails) [inky](https://github.com/zurb/inky) templating format
+    ```
+      > mix smoothie.compile --no-layout --foundation
     ```
 
     if you want to do it manually, that's also possible use:

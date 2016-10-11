@@ -10,6 +10,7 @@ defmodule Smoothie do
       @template_path [Mix.Project.build_path(), '..', '..'] ++ [Application.get_env(@otp_app, @smoothie_config)[:template_dir]]
       @build_path @template_path ++ ["build"]
       @template_files File.ls!(Path.join(@build_path))
+      unless File.exists?(Path.join(@build_path)), do: File.mkdir_p!(Path.join(@build_path))
 
       # Ensure the macro is recompiled when the templates are changed
       Enum.each(@template_files, fn(file) ->
