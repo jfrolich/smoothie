@@ -1,29 +1,23 @@
 defmodule Mix.Tasks.Smoothie.Compile do
   use Mix.Task
+  require Logger
   @shortdoc "Compiles smoothie templates"
 
-  def run(opts) do
 
-    opts = OptionParser.parse(opts)
-    |> Tuple.to_list()
-    |> List.first()
+  def run(_) do
+    modules = Application.get_env(:smoothie, :modules)
+    if modules == nil, do: raise("Smoothie: No smoothie modules options found to compile. Set config :smoothie, module_options: [MyModule].")
 
-    use_foundation = opts[:foundation] || :false
-    use_layout = if opts[:no_layout] == :true, do: :false, else: :true
-
-    otp_app = Mix.Project.config[:app]
-    configs = Application.get_env(otp_app, :smoothie_configs)
-
-    for config <- configs do
+    for module <- modules do
       path = Path.join([File.cwd!, "node_modules/.bin/elixir-smoothie"])
       env = [
-        {"MAIL_TEMPLATE_DIR", Application.get_env(otp_app, config)[:template_dir]},
-        {"LAYOUT_TEMPLATE_DIR", Application.get_env(otp_app, config)[:layout_dir]},
-        {"USE_FOUNDATION_EMAILS", Atom.to_string(use_foundation)},
-        {"USE_LAYOUT", Atom.to_string(use_layout)}
-        ]
+        {"SMOOTHIE_TEMPLATE_DIR", module.__smoothie_template_path__},
+        {"SMOOTHIE_LAYOUT_FILE", module.__smoothie_layout_path__},
+        {"SMOOTHIE_USE_FOUNDATION", if(module.__smoothie_use_foundation__, do: "true", else: "false")},
+        {"SMOOTHIE_SCSS_FILE", module.__smoothie_scss_path__},
+        {"SMOOTHIE_CSS_FILE", module.__smoothie_css_path__},
+      ]
       System.cmd(path, [], env: env, into: IO.stream(:stdio, :line))
     end
-
   end
 end

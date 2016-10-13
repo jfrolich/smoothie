@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "elixir-smoothie": "file:../elixir-smoothie"
+  }
+}
