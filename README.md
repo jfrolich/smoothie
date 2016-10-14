@@ -4,7 +4,8 @@ Stylesheet inlining and plain text template generation for your email templates.
 
 Follow the installation instructions to set up Smoothie. After that we can use it in the following way in our project:
 
-Let's suppose we are using the excellent Mailgun library to send our emails. Then we set up a Mailer module in the following location: `web/mailers/mailer.ex`, with the following content:
+Let's suppose we are using the excellent Mailgun library to send our emails.
+Then we set up a Mailer module in the following location: `web/mailers/mailer.ex`, with the following content:
 
 ```elixir
 defmodule MyApp.Mailer do
@@ -22,7 +23,7 @@ defmodule MyApp.Mailer do
 end
 ```
 
-Pretty boring right. So lets add smoothie. First we need a layout, lets try this one (save as: `web/mailers/templates/layout/layout.html.eex`):
+Pretty boring right. So lets add smoothie. First we need a layout, lets try this one (save as: `web/mailers/templates/layouts/main.html.eex`):
 
 ```html
 <!DOCTYPE html>
@@ -214,10 +215,19 @@ p, ul, ol {
 
 Now create the template for our email, we can save this in `web/mailers/templates/welcome.html.eex`
 
+Optionally adding additional css styling specific for this template partial is possible using `<style> </style>` tags.
+
 ```html
+<style>
+    .inner-template{
+        font-size: 120%;
+        color: lightgreen;
+    }
+</style>
+
 <h2>Hi <%= name %>,</h2>
 
-<p>Welcome!</p>
+<p class="inner-template">Welcome!</p>
 
 <p>Cheers,</p>
 
@@ -231,7 +241,11 @@ defmodule MyApp.Mailer do
   # your mailgun config here
   @config %{...}
   use Mailgun.Client, @config
-  use Smoothie
+  use Smoothie,
+    template_dir: "templates",
+    layout_file: Path.join("layouts", "main.html.eex")
+
+
 
   def welcome_email(user) do
     template_params = [
@@ -249,7 +263,14 @@ defmodule MyApp.Mailer do
 end
 ```
 
-The last thing to do is to compile the templates, we need to do this everytime when we change the templates or the layout:
+Additionally to enable smoothie compilation on this module we need to add the module to the configuration (`config/config.exs`):
+
+```elixir
+config :smoothie, modules: [MyApp.Mailer]
+```
+
+
+The last thing to do is to compile the templates, we need to do this every time when we change the templates or the layout:
 
 ```
 > mix smoothie.compile
@@ -282,27 +303,15 @@ Smoothie can be installed as:
     end
     ```
 
-  3. Specify the locations of your templates, edit `config/confix.exs` in your Elixir project and add the following config:
-
-    ```elixir
-      config :smoothie, template_dir: Path.join(["web", "mailers", "templates"])
-    ```
-
-    It can also be in any other directory, just provide the correct directory here.
-
-    It is really important to make sure this directory exists, otherwise your project will not compile.
-
-  4. The only thing left is install the npm package that smoothie relies on in your project, we can do this with the following command:
+  3. The only thing left is install the npm package that smoothie relies on in your project, we can do this with the following command:
 
     ```
       > mix smoothie.init
     ```
 
-    if you want to do it manually, that's also possible use:
-
+    Compile with layout
     ```
-      > npm i elixir-smoothie --save-dev
+      > mix smoothie.compile
     ```
-
 
 Smoothie needs to install a npm library to do the css inlining, so make sure you have npm initialized in your project (a `package.json` file in your project's root)

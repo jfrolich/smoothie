@@ -1,71 +1,80 @@
 defmodule Smoothie do
   require EEx
 
-  defmacro __using__(_options) do
-    quote do
-      import unquote(__MODULE__)
+  defmacro __using__(opts) do
+    quote bind_quoted: [opts: opts] do
+      require Logger
 
-      generate_views()
-    end
-  end
+      @smoothie_path __ENV__.file
+      |> Path.expand()
+      |> Path.dirname()
 
-  # location of the template path
-  @template_path [Mix.Project.build_path, '..', '..'] ++ [Application.get_env(:smoothie, :template_dir)]
+      @use_foundation Keyword.get(opts, :use_foundation)
+      @template_dir Keyword.get(opts, :template_dir)
+      @layout_file Keyword.get(opts, :layout_file)
+      @scss_file Keyword.get(opts, :scss_file)
+      @css_file Keyword.get(opts, :css_file)
 
-  # location of the build path
-  @build_path @template_path ++ ["build"]
+      def __smoothie_scss_path__, do: @scss_file && Path.join(@smoothie_path, @scss_file)
+      def __smoothie_css_path__, do: @css_file && Path.join(@smoothie_path, @css_file)
+      def __smoothie_path__, do: @smoothie_path
+      def __smoothie_use_foundation__, do: @use_foundation
 
-  # create the template and build folder at compile time if not exists
-  unless File.exists?(Path.join(@build_path)), do: File.mkdir_p!(Path.join(@build_path))
+      @template_path Path.join(@smoothie_path, @template_dir)
+      def __smoothie_template_path__, do: @template_path
 
-  @template_files File.ls!(Path.join(@build_path))
-  |> Enum.filter(fn(file) -> String.contains?(file, ".eex") end)
+      unless File.exists?(@template_path), do: raise("Smoothie: Template path not found: '#{@template_path}'")
+      @template_build_path Path.join(@template_path, "build")
+      unless File.exists?(@template_build_path), do: File.mkdir!(@template_build_path)
 
-  # Ensure the macro is recompiled when the templates are changed
-  @template_files
-  |> Enum.each(fn(file) ->
-    @external_resource Path.join(@build_path ++ [file])
-  end)
+      @layout_path if @layout_file, do: Path.join(@smoothie_path, @layout_file)
+      def __smoothie_layout_path__, do: @layout_path
+      unless @layout_path == nil || File.exists?(@layout_path), do: raise("Smoothie: Layout file not found: '#{@layout_path}'")
 
-  defmacro generate_views do
-    @template_files
-    |> Enum.map(fn(file) ->
-      # read the contents of the template
-      template_contents = File.read!(Path.join(@build_path ++ [file]))
+      @template_files File.ls!(@template_build_path)
 
-      # capture variables that are defined in the template
-      variables =
-        Regex.scan(~r/<%=[^\w]*(\w+)[^\w]*%>/, template_contents)
+      def __smoothie__, do: true
+
+      # Ensure the macro is recompiled when the templates are changed
+      Enum.each(@template_files, fn(file) ->
+        @external_resource Path.join(@template_build_path, file)
+      end)
+
+      Enum.each(@template_files, fn(file) ->
+        # read the contents of the template
+        @template_contents File.read!(Path.join(@template_build_path, file))
+
+        # capture variables that are defined in the template
+        @variables Regex.scan(~r/<%=(.*?)%>/, @template_contents)
         |> Enum.map(fn(match) ->
           match
           |> Enum.at(1)
-          |> String.to_atom
+          |> String.trim(" ")
+          |> String.to_atom()
         end)
         |> Enum.uniq
 
-      # create assignment macro code for in the function block
-      variable_assignments = variables |> Enum.map(fn(name) ->
-        quote do
-          unquote(Macro.var(name, nil)) = args[unquote(name)]
-        end
-      end)
+        # create assignment macro code for in the function block
+        @variable_assignments Enum.map(@variables, fn(name) ->
+          quote do
+            unquote(Macro.var(name, nil)) = args[unquote(name)]
+          end
+        end)
 
-      # generate function name from file name
-      template_name =
-        file
+        # generate function name from file name
+        @template_name file
         |> String.replace(".eex", "")
         |> String.replace(".html", "_html")
         |> String.replace(".txt", "_text")
         |> String.to_atom
 
-      compiled = EEx.compile_string(template_contents, [])
+        @compiled EEx.compile_string(@template_contents, [])
 
-      quote do
-        def unquote(template_name)(args) do
-          unquote(variable_assignments)
-          unquote(compiled)
+        def unquote(@template_name)(args) do
+          unquote(@variable_assignments)
+          unquote(@compiled)
         end
-      end
-    end)
+      end)
+    end
   end
 end
