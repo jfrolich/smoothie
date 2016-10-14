@@ -1,0 +1,7 @@
+<style>
+    .add-color{
+        background: lightblue;
+    }
+</style>
+<h2 class="add-color">Welcome!</h2>
+Hi <%= user %>

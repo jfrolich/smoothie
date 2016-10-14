@@ -13,6 +13,7 @@ defmodule Smoothie.Mixfile do
       """,
       deps: deps(),
       package: package(),
+      elixirc_paths: elixirc_paths()
     ]
   end
 
@@ -53,4 +54,7 @@ defmodule Smoothie.Mixfile do
       files: ~w(lib mix.exs README.md),
     ]
   end
+
+  defp elixirc_paths(), do: ["lib", "test/data/css", "test/data/scss", "test/data/foundation"]
+
 end

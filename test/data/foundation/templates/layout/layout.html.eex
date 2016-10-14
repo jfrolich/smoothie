@@ -1,0 +1,11 @@
+<wrapper>
+    <container>
+        <row class="collapse">
+            <columns small="6">
+                {content}
+            </columns>
+            <columns small="6" class="grey-color">
+            </columns>
+        </row>
+    </container>
+</wrapper>

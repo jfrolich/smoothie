@@ -9,7 +9,7 @@ defmodule Smoothie do
       |> Path.expand()
       |> Path.dirname()
 
-      @use_foundation Keyword.get(opts, :use_foundation)
+      @use_foundation Keyword.get(opts, :use_foundation) || :false
       @template_dir Keyword.get(opts, :template_dir)
       @layout_file Keyword.get(opts, :layout_file)
       @scss_file Keyword.get(opts, :scss_file)
