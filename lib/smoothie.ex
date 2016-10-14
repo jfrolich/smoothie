@@ -1,16 +1,9 @@
 defmodule Smoothie do
   require EEx
 
-  Module.register_attribute(__MODULE__, :modules, accumulate: true)
-  def register_module(module) do
-    @modules module
-  end
-
   defmacro __using__(opts) do
     quote bind_quoted: [opts: opts] do
       require Logger
-
-      Smoothie.register_module(__MODULE__)
 
       @smoothie_path __ENV__.file
       |> Path.expand()
@@ -22,8 +15,8 @@ defmodule Smoothie do
       @scss_file Keyword.get(opts, :scss_file)
       @css_file Keyword.get(opts, :css_file)
 
-      def __smoothie_scss_path__, do: @scss_file && Path.join([@smoothie_path, @scss_file])
-      def __smoothie_css_path__, do: @css_file && Path.join([@smoothie_path, @css_file])
+      def __smoothie_scss_path__, do: @scss_file && Path.join(@smoothie_path, @scss_file)
+      def __smoothie_css_path__, do: @css_file && Path.join(@smoothie_path, @css_file)
       def __smoothie_path__, do: @smoothie_path
       def __smoothie_use_foundation__, do: @use_foundation
 
@@ -40,15 +33,7 @@ defmodule Smoothie do
 
       @template_files File.ls!(@template_build_path)
 
-      def __smoothie__ do
-        %{
-          __smoothie_template_path__: __smoothie_template_path__(),
-          __smoothie_layout_path__: __smoothie_layout_path__(),
-          __smoothie_use_foundation__: __smoothie_use_foundation__(),
-          __smoothie_scss_path__: __smoothie_scss_path__(),
-          __smoothie_css_path__: __smoothie_css_path__(),
-        }
-      end
+      def __smoothie__, do: true
 
       # Ensure the macro is recompiled when the templates are changed
       Enum.each(@template_files, fn(file) ->

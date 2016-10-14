@@ -3,10 +3,11 @@ defmodule Mix.Tasks.Smoothie.Compile do
   require Logger
   @shortdoc "Compiles smoothie templates"
 
-
   def run(_) do
+    Mix.Task.run "loadpaths", []
+
     modules = Application.get_env(:smoothie, :modules)
-    if modules == nil, do: raise("Smoothie: No smoothie modules options found to compile. Set config :smoothie, module_options: [MyModule].")
+    if modules == nil, do: raise("Smoothie: No smoothie modules options found to compile. Set config :smoothie, modules: [MyApp.MyModule].")
 
     for module <- modules do
       path = Path.join([File.cwd!, "node_modules/.bin/elixir-smoothie"])

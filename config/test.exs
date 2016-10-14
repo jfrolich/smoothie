@@ -1,3 +1,3 @@
 use Mix.Config
 
-config :smoothie, modules: [Mailer.__smoothie__]
+config :smoothie, modules: [Mailer]
