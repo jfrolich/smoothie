@@ -291,7 +291,7 @@ Smoothie can be installed as:
 
     ```elixir
     def deps do
-      [{:smoothie, "~> 1.0.0"}]
+      [{:smoothie, "~> 2.0.0"}]
     end
     ```
 
