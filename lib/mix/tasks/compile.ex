@@ -15,10 +15,10 @@ defmodule Mix.Tasks.Smoothie.Compile do
       try do
         module.__smoothie_template_path__
       rescue
-        e in UndefinedFunctionError ->
-        Mix.Shell.IO.info("module.__smoothie_template_path__ function has not been defined")
-        Mix.Shell.IO.info("Perhaps  #{Mix.Project.config()[:app]} has not been compiled yet.")
-        Mix.Shell.IO.yes?("Do you wish to compile #{Mix.Project.config()[:app]} ?") && Mix.Tasks.Compile.run([])
+        _e in UndefinedFunctionError ->
+          Mix.Shell.IO.info("module.__smoothie_template_path__ function has not been defined")
+          Mix.Shell.IO.info("Perhaps  #{Mix.Project.config()[:app]} has not been compiled yet.")
+          Mix.Shell.IO.yes?("Do you wish to compile #{Mix.Project.config()[:app]} ?") && Mix.Tasks.Compile.run([])
       end
       env = [
         {"SMOOTHIE_TEMPLATE_DIR", module.__smoothie_template_path__},
