@@ -13,6 +13,7 @@ defmodule SmoothieTest do
     |> Enum.map(&(Path.join([Path.dirname(&1), "build"])))
     |> Enum.each(&File.rm_rf!/1)
     Mix.Tasks.Smoothie.Compile.run([])
+    :ok
   end
 
   for module_path <- @module_paths do
