@@ -4,4 +4,8 @@ defmodule Foundation.Mailer do
     layout_file: Path.join(["templates", "layout", "layout.html.eex"]),
     scss_file: Path.join(["templates", "layout", "style.scss"]),
     use_foundation: true
+  @user "Elixir Developer"
+
+  def text(), do: welcome_text([user: @user])
+  def html(), do: welcome_html([user: @user])
 end
