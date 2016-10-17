@@ -9,7 +9,7 @@ defmodule Smoothie do
       |> Path.expand()
       |> Path.dirname()
 
-      @use_foundation Keyword.get(opts, :use_foundation)
+      @use_foundation Keyword.get(opts, :use_foundation) || :false
       @template_dir Keyword.get(opts, :template_dir)
       @layout_file Keyword.get(opts, :layout_file)
       @scss_file Keyword.get(opts, :scss_file)
@@ -75,6 +75,30 @@ defmodule Smoothie do
           unquote(@compiled)
         end
       end)
+
+      # create mock functions to avoid compilation deadlock on first `clean` compilation
+      if @template_files == [] do
+        Enum.filter(File.ls!(@template_path), &(String.contains?(&1, ".html.eex")))
+        |> Enum.each(fn(file) ->
+          funcs = [
+          file
+          |> String.replace(".html.eex", "_html")
+          |> String.to_atom()
+          ]
+          ++
+          [
+          file
+          |> String.replace(".html.eex", "_text")
+          |> String.to_atom()
+          ]
+          Enum.each(funcs, fn(func) ->
+            def unquote(func)(_args) do
+              raise("#{unquote(file)} has not yet been compiled by smoothie, run `mix smoothie.compile`.")
+            end
+          end)
+        end)
+      end
+
     end
   end
 end

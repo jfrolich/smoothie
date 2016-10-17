@@ -1,4 +1,4 @@
 <h1 style="text-decoration: line-through;">Test</h1>
-<h1 style="text-decoration: line-through;">Welcome!</h1>
+<h2>Welcome!</h2>
 Hi <%= user %>
 

@@ -315,3 +315,9 @@ Smoothie can be installed as:
     ```
 
 Smoothie needs to install a npm library to do the css inlining, so make sure you have npm initialized in your project (a `package.json` file in your project's root)
+
+## Tests
+
+```
+npm install -d && mix test
+```
