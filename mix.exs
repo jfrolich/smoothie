@@ -4,7 +4,7 @@ defmodule Smoothie.Mixfile do
   def project do
     [
       app: :smoothie,
-      version: "2.0.0",
+      version: "2.0.1",
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -48,7 +48,7 @@ defmodule Smoothie.Mixfile do
   defp package do
     [
       name: :smoothie,
-      maintainers: ["Jaap Frölich"],
+      maintainers: ["Jaap Frölich", "Stephen Moloney"],
       licenses: ["MIT"],
       links: %{github: "https://github.com/jfrolich/smoothie"},
       files: ~w(lib mix.exs README.md),
@@ -57,5 +57,4 @@ defmodule Smoothie.Mixfile do
 
   defp elixirc_paths(:test), do: ["lib", "test/data/css", "test/data/scss", "test/data/foundation"]
   defp elixirc_paths(_), do: ["lib"]
-
 end
