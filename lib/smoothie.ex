@@ -15,8 +15,16 @@ defmodule Smoothie do
       @scss_file Keyword.get(opts, :scss_file)
       @css_file Keyword.get(opts, :css_file)
 
-      def __smoothie_scss_path__, do: @scss_file && Path.join(@smoothie_path, @scss_file)
-      def __smoothie_css_path__, do: @css_file && Path.join(@smoothie_path, @css_file)
+      if @scss_file do
+        def __smoothie_scss_path__, do: Path.join(@smoothie_path, @scss_file)
+      else
+        def __smoothie_scss_path__, do: nil
+      end
+      if @css_file do
+        def __smoothie_css_path__, do: Path.join(@smoothie_path, @css_file)
+      else
+        def __smoothie_css_path__, do: nil
+      end
       def __smoothie_path__, do: @smoothie_path
       def __smoothie_use_foundation__, do: @use_foundation
 
