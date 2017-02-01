@@ -4,6 +4,7 @@ defmodule Smoothie do
   defmacro __using__(opts) do
     quote bind_quoted: [opts: opts] do
       require Logger
+      require EEx
 
       @smoothie_path __ENV__.file
       |> Path.expand()
@@ -52,36 +53,13 @@ defmodule Smoothie do
         # read the contents of the template
         @template_contents File.read!(Path.join(@template_build_path, file))
 
-        # capture variables that are defined in the template
-        @variables Regex.scan(~r/<%=(.*?)%>/, @template_contents)
-        |> Enum.map(fn(match) ->
-          match
-          |> Enum.at(1)
-          |> String.trim(" ")
-          |> String.to_atom()
-        end)
-        |> Enum.uniq
-
-        # create assignment macro code for in the function block
-        @variable_assignments Enum.map(@variables, fn(name) ->
-          quote do
-            unquote(Macro.var(name, nil)) = args[unquote(name)]
-          end
-        end)
-
-        # generate function name from file name
         @template_name file
         |> String.replace(".eex", "")
         |> String.replace(".html", "_html")
         |> String.replace(".txt", "_text")
         |> String.to_atom
 
-        @compiled EEx.compile_string(@template_contents, [])
-
-        def unquote(@template_name)(args) do
-          unquote(@variable_assignments)
-          unquote(@compiled)
-        end
+        EEx.function_from_string(:def, @template_name, @template_contents, [:assigns])
       end)
 
       # create mock functions to avoid compilation deadlock on first `clean` compilation
@@ -106,7 +84,6 @@ defmodule Smoothie do
           end)
         end)
       end
-
     end
   end
 end
