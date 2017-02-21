@@ -46,7 +46,7 @@ Pretty boring right. So lets add smoothie. First we need a layout, lets try this
         <table>
           <tr>
             <td align="center" class="masthead">
-              <h1><%= title %></h1>
+              <h1><%= @title %></h1>
             </td>
           </tr>
           <tr>
@@ -225,7 +225,7 @@ Optionally adding additional css styling specific for this template partial is p
     }
 </style>
 
-<h2>Hi <%= name %>,</h2>
+<h2>Hi <%= @name %>,</h2>
 
 <p class="inner-template">Welcome!</p>
 
