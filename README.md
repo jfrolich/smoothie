@@ -291,7 +291,7 @@ Smoothie can be installed as:
 
     ```elixir
     def deps do
-      [{:smoothie, "~> 2.0.0"}]
+      [{:smoothie, "~> 3.0"}]
     end
     ```
 
@@ -319,5 +319,9 @@ Smoothie needs to install a npm library to do the css inlining, so make sure you
 ## Tests
 
 ```
-npm install -d && mix test
+yarn install && mix test
 ```
+
+## TODO
+
+- [ ] Create example usage repository (and link to README)

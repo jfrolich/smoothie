@@ -55,6 +55,15 @@ defmodule Smoothie.Mixfile do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/data/css", "test/data/scss", "test/data/foundation"]
+  defp elixirc_paths(:test) do
+    [
+      "lib",
+      "test/data/build",
+      "test/data/css",
+      "test/data/scss",
+      "test/data/foundation",
+      "test/data/no_compile"
+    ]
+  end
   defp elixirc_paths(_), do: ["lib"]
 end
