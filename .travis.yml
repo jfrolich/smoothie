@@ -9,6 +9,7 @@ before_install:
   - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
   - sudo apt-get update && sudo apt-get install yarn
+  - yarn install
 
 otp_release:
   - 19.2
@@ -17,5 +18,4 @@ elixir:
   - 1.4.2
 
 script:
-  - yarn install
   - mix test
