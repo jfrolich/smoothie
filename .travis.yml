@@ -3,7 +3,7 @@ sudo: true
 language: elixir
 
 before_install:
-  - git clone https://github.com/stephenmoloney/elixir-smoothie.git ../elixir-smoothie
+  - git clone https://github.com/jfrolich/elixir-smoothie.git ../elixir-smoothie
   - curl -sL https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh -o install_nvm.sh && bash install_nvm.sh && source ~/.profile
   - nvm install 7.8.0 && nvm use 7.8.0
   - nvm alias default 7.8.0 && nvm use default
