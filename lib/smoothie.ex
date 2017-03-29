@@ -6,42 +6,27 @@ defmodule Smoothie do
       require Logger
       require EEx
 
-      @smoothie_path __ENV__.file
-      |> Path.expand()
-      |> Path.dirname()
+      @smoothie_path Path.expand(__ENV__.file) |> Path.dirname()
+      @use_foundation Keyword.get(opts, :use_foundation, :false)
+      @template_dir Keyword.get(opts, :template_dir, :nil)
+      @template_build_path Keyword.get(opts, :template_build_dir, Path.join(@template_dir, "build"))
+      @layout_file Keyword.get(opts, :layout_file, :nil)
+      @scss_file Keyword.get(opts, :scss_file, :nil)
+      @css_file Keyword.get(opts, :css_file, :nil)
 
-      @use_foundation Keyword.get(opts, :use_foundation) || :false
-      @template_dir Keyword.get(opts, :template_dir)
-      @layout_file Keyword.get(opts, :layout_file)
-      @scss_file Keyword.get(opts, :scss_file)
-      @css_file Keyword.get(opts, :css_file)
-
-      if @scss_file do
-        def __smoothie_scss_path__, do: Path.join(@smoothie_path, @scss_file)
-      else
-        def __smoothie_scss_path__, do: nil
-      end
-      if @css_file do
-        def __smoothie_css_path__, do: Path.join(@smoothie_path, @css_file)
-      else
-        def __smoothie_css_path__, do: nil
-      end
-      def __smoothie_path__, do: @smoothie_path
-      def __smoothie_use_foundation__, do: @use_foundation
-
-      @template_path Path.join(@smoothie_path, @template_dir)
-      def __smoothie_template_path__, do: @template_path
-
-      unless File.exists?(@template_path), do: raise("Smoothie: Template path not found: '#{@template_path}'")
-      @template_build_path Path.join(@template_path, "build")
-      unless File.exists?(@template_build_path), do: File.mkdir!(@template_build_path)
-
-      @layout_path if @layout_file, do: Path.join(@smoothie_path, @layout_file)
-      def __smoothie_layout_path__, do: @layout_path
-      unless @layout_path == nil || File.exists?(@layout_path), do: raise("Smoothie: Layout file not found: '#{@layout_path}'")
-
+      File.exists?(@template_dir) || raise("Smoothie: Template path not found: '#{@template_dir}'")
+      File.exists?(@template_build_path) || File.mkdir!(@template_build_path)
+      File.exists?(@layout_file) || raise("Smoothie: Layout file not found: '#{@layout_file}'")
+      @layout_file|| raise("Smoothie: Layout file not found: '#{@layout_file}'")
       @template_files File.ls!(@template_build_path)
 
+      def __smoothie_path__(), do: @smoothie_path
+      def __smoothie_use_foundation__(), do: @use_foundation
+      def __smoothie_template_path__(), do: @template_dir
+      def __smoothie_template_build_path__(), do: @template_build_path
+      def __smoothie_layout_path__, do: @layout_file
+      def __smoothie_scss_path__(), do: @scss_file
+      def __smoothie_css_path__(), do: @css_file
       def __smoothie__, do: true
 
       # Ensure the macro is recompiled when the templates are changed
@@ -57,14 +42,14 @@ defmodule Smoothie do
         |> String.replace(".eex", "")
         |> String.replace(".html", "_html")
         |> String.replace(".txt", "_text")
-        |> String.to_atom
+        |> String.to_atom()
 
         EEx.function_from_string(:def, @template_name, @template_contents, [:assigns])
       end)
 
       # create mock functions to avoid compilation deadlock on first `clean` compilation
       if @template_files == [] do
-        Enum.filter(File.ls!(@template_path), &(String.contains?(&1, ".html.eex")))
+        Enum.filter(File.ls!(@template_dir), &(String.contains?(&1, ".html.eex")))
         |> Enum.each(fn(file) ->
           funcs = [
           file
