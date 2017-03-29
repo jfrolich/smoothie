@@ -1,8 +1,9 @@
 defmodule SmoothieTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: :false
   doctest Smoothie
 
   @modules [
+    Build.Mailer,
     Scss.Mailer,
     Css.Mailer,
     Foundation.Mailer
@@ -49,4 +50,5 @@ defmodule SmoothieTest do
       assert(trim(actual_text) == trim(expected_text))
     end
   end
+
 end
