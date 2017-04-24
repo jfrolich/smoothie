@@ -1,0 +1,22 @@
+sudo: true
+
+language: elixir
+
+before_install:
+  - git clone https://github.com/jfrolich/elixir-smoothie.git ../elixir-smoothie
+  - curl -sL https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh -o install_nvm.sh && bash install_nvm.sh && source ~/.profile
+  - nvm install 7.8.0 && nvm use 7.8.0
+  - nvm alias default 7.8.0 && nvm use default
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  - sudo apt-get update && sudo apt-get install yarn
+  - yarn install
+
+otp_release:
+  - 19.2
+
+elixir:
+  - 1.4.2
+
+script:
+  - mix test
