@@ -1,10 +1,11 @@
 defmodule Smoothie.Mixfile do
   use Mix.Project
+    @version "3.1.0"
 
   def project do
     [
       app: :smoothie,
-      version: "2.0.2",
+      version: @version,
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -55,6 +56,15 @@ defmodule Smoothie.Mixfile do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/data/css", "test/data/scss", "test/data/foundation"]
+  defp elixirc_paths(:test) do
+    [
+      "lib",
+      "test/data/build",
+      "test/data/css",
+      "test/data/scss",
+      "test/data/foundation",
+      "test/data/no_compile"
+    ]
+  end
   defp elixirc_paths(_), do: ["lib"]
 end
