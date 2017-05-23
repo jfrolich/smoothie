@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Smoothie.Init do
   use Mix.Task
   @shortdoc "Initializes smoothie"
-  @package_version "elixir-smoothie@2.X"
+  @package_version "elixir-smoothie@3.X"
   @root "./"
   @assets "./assets"
   @standard_opts [into: IO.stream(:stdio, :line), cd: @root]
