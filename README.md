@@ -283,36 +283,55 @@ Done 🙏
 
 Done! Now we are able to send very beautifully styled templates with styles inlined so it works in every email client, and for we also have a nice plain text version of the email!
 
+## Text templates
+
+Smoothie automatically generates `txt.eex` templates from your `html.eex` files. If you don't like them, you can provide your own `txt.eex` templates by saving them to the same directory as your `html.eex` files.
+
+```
+/build
+/layout
+welcome.html.eex
+welcome.txt.eex
+```
+
+To skip generating text templates altogether, set `:html_only` in your config,
+
+```elixir
+config :smoothie, html_only: true
+```
+
+or run `mix smoothie.compile --html-only`.
+
 ## Installation
 
 Smoothie can be installed as:
 
   1. Add `smoothie` to your list of dependencies in `mix.exs`:
 
-    ```elixir
-    def deps do
-      [{:smoothie, "~> 3.0"}]
-    end
-    ```
+  ```elixir
+  def deps do
+    [{:smoothie, "~> 3.0"}]
+  end
+  ```
 
   2. Ensure `smoothie` is started before your application:
 
-    ```elixir
-    def application do
-      [applications: [:smoothie]]
-    end
-    ```
+  ```elixir
+  def application do
+    [applications: [:smoothie]]
+  end
+  ```
 
   3. The only thing left is install the npm package that smoothie relies on in your project, we can do this with the following command:
 
-    ```
-      > mix smoothie.init
-    ```
+  ```
+    > mix smoothie.init
+  ```
 
-    Compile with layout
-    ```
-      > mix smoothie.compile
-    ```
+  Compile with layout
+  ```
+    > mix smoothie.compile
+  ```
 
 Smoothie needs to install a npm library to do the css inlining, so make sure you have npm initialized in your project (a `package.json` file in your project's root)
 
